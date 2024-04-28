@@ -1,6 +1,5 @@
 "use client"
 
-import { GET } from "@/app/api/mocks/recipes/route";
 import RecipeCard from "@/components/base/meal/meal";
 import BlackRoundButton from "@/components/ui/buttun/BlackRoundButton";
 import GreenRoundButton from "@/components/ui/buttun/GreenRoundButtun";
@@ -35,9 +34,18 @@ const Result: React.FC = () => {
         const fetchRecipes = async () => {
             try {
                 /* 赤波線出ているがこれで問題ない */
-                const response = await GET(); // Call the GET function
+                const response = await fetch('https://recommend-recipes-4b45go5xeq-an.a.run.app/v1/recipes/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "texts": ["いやなことがあった", "イライラしている", "痩せたい"],
+                        "conditions": ["簡単", "おいしい", "安い"]
+                    })
+                }); // Call the GET function
                 const data = await response.json(); // Extract JSON data from the response
-                setRecipes(data.recipes); // Set the fetched recipes in the state
+                setRecipes(data['recipes']); // Set the fetched recipes in the state
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             }
